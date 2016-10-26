@@ -38,7 +38,6 @@ public class Track  {
     @SerializedName("station_id")
     private String mStaionId;
 
-    private ArrayList<Track> mTrackList;
 
     public Track(String mStaionId, String mGenre, String mCallSign, String mArtist, String mSongstamp, String mTitle, String mSecondsRemaining) {
         this.mStaionId = mStaionId;
@@ -50,59 +49,59 @@ public class Track  {
         this.mSecondsRemaining = mSecondsRemaining;
     }
 
-    public String getmCallSign() {
+    public String getCallSign() {
         return mCallSign;
     }
 
-    public void setmCallSign(String mCallSign) {
+    public void setCallSign(String mCallSign) {
         this.mCallSign = mCallSign;
     }
 
-    public String getmGenre() {
+    public String getGenre() {
         return mGenre;
     }
 
-    public void setmGenre(String mGenre) {
+    public void setGenre(String mGenre) {
         this.mGenre = mGenre;
     }
 
-    public String getmArtist() {
+    public String getArtist() {
         return mArtist;
     }
 
-    public void setmArtist(String mArtist) {
+    public void setArtist(String mArtist) {
         this.mArtist = mArtist;
     }
 
-    public String getmSongstamp() {
+    public String getSongstamp() {
         return mSongstamp;
     }
 
-    public void setmSongstamp(String mSongstamp) {
+    public void setSongstamp(String mSongstamp) {
         this.mSongstamp = mSongstamp;
     }
 
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
+    public void setTitle(String mTitle) {
         this.mTitle = mTitle;
     }
 
-    public String getmSecondsRemaining() {
+    public String getSecondsRemaining() {
         return mSecondsRemaining;
     }
 
-    public void setmSecondsRemaining(String mSecondsRemaining) {
+    public void setSecondsRemaining(String mSecondsRemaining) {
         this.mSecondsRemaining = mSecondsRemaining;
     }
 
-    public String getmStaionId() {
+    public String getStaionId() {
         return mStaionId;
     }
 
-    public void setmStaionId(String mStaionId) {
+    public void setStaionId(String mStaionId) {
         this.mStaionId = mStaionId;
     }
 
