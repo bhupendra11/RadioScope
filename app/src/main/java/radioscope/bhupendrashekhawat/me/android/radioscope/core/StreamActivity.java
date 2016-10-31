@@ -36,6 +36,9 @@ public class StreamActivity extends AppCompatActivity {
     private ExoPlayer exoPlayer;
     private static final int BUFFER_SEGMENT_SIZE = 64 * 1024;
     private static final int BUFFER_SEGMENT_COUNT = 256;
+    final String SONG_TITLE = "songTitle";
+    final String SONG_INDEX = "songIndex";
+
     private ImageButton btnPlay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,6 @@ public class StreamActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "BUILT URI FOR STREAMING: " + builtUri);
 
         btnPlay = (ImageButton) findViewById(R.id.btnPlay);
-
-
 
 
         // 1. Create a default TrackSelector
@@ -95,10 +96,8 @@ public class StreamActivity extends AppCompatActivity {
 
 
 
-/* Set on click listeners for the playback controls *//*
+/* Set on click listeners for the playback controls */
 
-
-        */
 /**
  * Play button click event
  * */

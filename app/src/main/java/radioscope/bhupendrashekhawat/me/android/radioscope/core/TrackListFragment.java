@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TrackListFragment extends Fragment {
 
     private static final String API_BASE_URL = "http://api.dar.fm/";
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = TrackListFragment.class.getSimpleName();
     private RadioService.DARfmApi darFMApi;
     private Call<AllTracks> callTracks;
     private AllTracks allTracks;
@@ -46,6 +47,8 @@ public class TrackListFragment extends Fragment {
 
     //ArrayAdapter<String> listAdapter ;
     TrackAdapter trackAdapter;
+    final String SONG_TITLE = "songTitle";
+    final String SONG_INDEX = "songIndex";
 
 
     @Override
@@ -54,14 +57,16 @@ public class TrackListFragment extends Fragment {
 
         boolean isInternetPermissionGranted = isInternetPermissionGranted();
 
-       /* Button playButton = (Button) getActivity().findViewById(R.id.start_button);
+      /* Button playButton = (Button) getActivity().findViewById(R.id.start_button);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getA, StreamActivity.class);
+                Intent intent = new Intent(getActivity(), StreamActivity.class);
                 startActivity(intent);
             }
         });*/
+
+
 
         Log.d(LOG_TAG, "Internet access permission = " +isInternetPermissionGranted);
 
@@ -77,7 +82,7 @@ public class TrackListFragment extends Fragment {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                // .client(httpClient.build())
+                .client(httpClient.build())
                 .build();
 
         darFMApi = retrofit.create(RadioService.DARfmApi.class);
@@ -101,24 +106,34 @@ public class TrackListFragment extends Fragment {
         listView = (ListView) rootView.findViewById(R.id.trackListView);
 
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(getActivity(), StreamActivity.class);
+                /*Intent intent = new Intent(getActivity(), StreamActivity.class);
+
+                startActivity(intent);*/
+
+
+                int songIndex = position;
+                Track track  = trackItems.get(songIndex);
+                Toast.makeText(getActivity(), "Click on "+ track.getTitle()
+                        , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity() , StreamActivity.class);
+                intent.putExtra(SONG_INDEX, songIndex);
                 startActivity(intent);
 
             }
         } );
 
 
+
+
         trackAdapter = new TrackAdapter(getActivity(),trackItems);
         listView.setAdapter(trackAdapter);
         Log.d(LOG_TAG,"TrackList size = "+trackItems.size());
         getTracks();
-
-
-
 
         //trackAdapter.notifyDataSetChanged();
 

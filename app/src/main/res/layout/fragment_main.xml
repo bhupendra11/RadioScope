@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="radioscope.bhupendrashekhawat.me.android.radioscope.core.TrackListFragment">
 
-    <Button
+   <!-- <Button
         android:text="Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:layout_marginLeft="111dp"
         android:layout_marginStart="111dp"
         android:layout_marginBottom="463dp"
-        android:id="@+id/start_button" />
+        android:id="@+id/start_button" />-->
 
     <ListView
         android:id="@+id/trackListView"
