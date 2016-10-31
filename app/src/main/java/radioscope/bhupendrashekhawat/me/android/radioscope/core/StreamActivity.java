@@ -47,7 +47,10 @@ public class StreamActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       String BASE_URL= "http://feeds.cato.org/~r/CatoDailyPodcast/~5/eSxR_UthAqM/Unraveled-Obamacare-Religious-Liberty-and-Executive-Power.mp3";
+       //String BASE_URL= "http://feeds.cato.org/~r/CatoDailyPodcast/~5/eSxR_UthAqM/Unraveled-Obamacare-Religious-Liberty-and-Executive-Power.mp3";
+       String BASE_URL = "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p";
+
+
 
         Uri builtUri = Uri.parse(BASE_URL).buildUpon().build();
 

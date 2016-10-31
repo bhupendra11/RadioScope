@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="radioscope.bhupendrashekhawat.me.android.radioscope.core.TrackListFragment">
+    tools:context="radioscope.bhupendrashekhawat.me.android.radioscope.core.TalkshowFragment">
 
     <ListView
-        android:id="@+id/trackListView"
+        android:id="@+id/talkshowListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

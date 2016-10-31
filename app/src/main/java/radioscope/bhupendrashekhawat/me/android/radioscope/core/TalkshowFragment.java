@@ -24,29 +24,28 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import radioscope.bhupendrashekhawat.me.android.radioscope.BuildConfig;
 import radioscope.bhupendrashekhawat.me.android.radioscope.R;
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.RadioService;
-import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.AllTracks;
-import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.Track;
+import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.AllTalkshows;
+import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.Talkshow;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TrackListFragment extends Fragment {
+public class TalkshowFragment  extends Fragment {
 
     private static final String API_BASE_URL = "http://api.dar.fm/";
-    private static final String LOG_TAG = TrackListFragment.class.getSimpleName();
+    private static final String LOG_TAG = TalkshowFragment.class.getSimpleName();
     private RadioService.DARfmApi darFMApi;
-    private Call<AllTracks> callTracks;
-    private AllTracks allTracks;
-    private ArrayList<Track> trackItems = new ArrayList<Track>();
+    private Call<AllTalkshows> callTalkshows;
+    private AllTalkshows allTalkshows;
+    private ArrayList<Talkshow> talkshowItems = new ArrayList<Talkshow>();
 
     // private ArrayList<String> songList = new ArrayList<String>();
     private ListView listView;
 
     //ArrayAdapter<String> listAdapter ;
-    TrackAdapter trackAdapter;
-    final String SONG_TITLE = "songTitle";
+    TalkshowAdapter talkshowAdapter;
     final String SONG_INDEX = "songIndex";
 
 
@@ -80,20 +79,15 @@ public class TrackListFragment extends Fragment {
 
         //listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,songList);
 
-
-
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_talkshow, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.trackListView);
+        listView = (ListView) rootView.findViewById(R.id.talkshowListView);
 
 
 
@@ -107,8 +101,8 @@ public class TrackListFragment extends Fragment {
 
 
                 int songIndex = position;
-                Track track  = trackItems.get(songIndex);
-                Toast.makeText(getActivity(), "Click on "+ track.getTitle()
+                Talkshow talkshow = talkshowItems.get(songIndex);
+                Toast.makeText(getActivity(), "Click on "+ talkshow.getmShowname()
                         , Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity() , StreamActivity.class);
                 intent.putExtra(SONG_INDEX, songIndex);
@@ -120,10 +114,10 @@ public class TrackListFragment extends Fragment {
 
 
 
-        trackAdapter = new TrackAdapter(getActivity(),trackItems);
-        listView.setAdapter(trackAdapter);
-        Log.d(LOG_TAG,"TrackList size = "+trackItems.size());
-        getTracks();
+        talkshowAdapter = new TalkshowAdapter(getActivity(),talkshowItems);
+        listView.setAdapter(talkshowAdapter);
+        Log.d(LOG_TAG,"TalkshowList size = "+talkshowItems.size());
+        getTalkshows();
 
         //trackAdapter.notifyDataSetChanged();
 
@@ -131,46 +125,46 @@ public class TrackListFragment extends Fragment {
     }
 
 
-    public void updateTracks(List<Track> trackList){
-        Log.d(LOG_TAG,"TrackList size , in UpdateTracks = "+trackList.size());
-       // trackItems.clear();
-        Log.d(LOG_TAG,"TrackItems size , in UpdateTracks after clear = "+trackItems.size()+ "supplied TrackList= "+trackList.size());
-        trackItems.addAll(trackList);
-        Log.d(LOG_TAG,"TrackItems size , in UpdateTracks after add all items = "+trackItems.size()+ "supplied TrackList= "+trackList.size());
-        trackAdapter = new TrackAdapter(getActivity(),trackItems);
-        Log.d(LOG_TAG,"Items in trackAdappter = "+trackAdapter.getCount());
-        listView.setAdapter(trackAdapter);
+    public void updateTalkshows(List<Talkshow> talkshowList){
+        Log.d(LOG_TAG,"TalkshowList size , in UpdateTalkshows = "+talkshowList.size());
+
+        Log.d(LOG_TAG,"TalkshowItems size , in UpdateTalkshows after clear = "+talkshowItems.size()+ "supplied TalkshowList= "+talkshowList.size());
+        talkshowItems.addAll(talkshowList);
+        Log.d(LOG_TAG,"TalkshowItems size , in UpdateTalkshows after add all items = "+talkshowItems.size()+ "supplied TalkshowList= "+talkshowList.size());
+        talkshowAdapter = new TalkshowAdapter(getActivity(),talkshowItems);
+        Log.d(LOG_TAG,"Items in talkshowAdappter = "+talkshowAdapter.getCount());
+        listView.setAdapter(talkshowAdapter);
     }
 
-    public void getTracks(){
+    public void getTalkshows(){
 
-        callTracks = darFMApi.getTracks("jazz","json", BuildConfig.DARfm_API_KEY);
+        callTalkshows = darFMApi.getTalkshows("jazz","json", BuildConfig.DARfm_API_KEY);
 
-        callTracks.enqueue(new Callback<AllTracks>() {
+        callTalkshows.enqueue(new Callback<AllTalkshows>() {
 
             @Override
-            public void onResponse(Call<AllTracks> call, Response<AllTracks> response) {
+            public void onResponse(Call<AllTalkshows> call, Response<AllTalkshows> response) {
 
 
                 Log.d(LOG_TAG, "Got response from API, URL called is : "+call.request().url());
-                Track curTrack;
-                allTracks = response.body();
-                trackItems = allTracks.getTrackList();
-                for (int i = 0; i < trackItems.size(); i++) {
-                    curTrack = trackItems.get(i);
-                    //  songList.add(curTrack.getTitle());
-                    Log.d(LOG_TAG, "Song: " + curTrack.getTitle()+" CallSign : "+curTrack.getCallSign()+" Artist: "+curTrack.getArtist());
+                Talkshow curTalkshow;
+                allTalkshows = response.body();
+                talkshowItems = allTalkshows.getTalkshowList();
+                for (int i = 0; i < talkshowItems.size(); i++) {
+                    curTalkshow = talkshowItems.get(i);
+                    //  songList.add(curTalkshow.getTitle());
+                    Log.d(LOG_TAG, "Showname: " + curTalkshow.getmShowname()+" Category : "+curTalkshow.getmShowGenre()+" Showid: "+curTalkshow.getmShowid() );
                 }
 
-                Log.d(LOG_TAG,"TrackList size inside onResponse = "+trackItems.size());
-                updateTracks(trackItems);
+                Log.d(LOG_TAG,"TalkshowList size inside onResponse = "+talkshowItems.size());
+                updateTalkshows(talkshowItems);
                 //listAdapter.notifyDataSetChanged();
 
 
             }
 
             @Override
-            public void onFailure(Call<AllTracks> call, Throwable t) {
+            public void onFailure(Call<AllTalkshows> call, Throwable t) {
                 Log.d(LOG_TAG, "API call falied , URL called is : "+call.request().url());
                 Log.d(LOG_TAG , "Response is :\n" +call.request().body());
             }
