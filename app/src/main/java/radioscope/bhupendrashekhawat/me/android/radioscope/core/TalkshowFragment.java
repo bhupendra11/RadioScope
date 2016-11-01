@@ -16,6 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +26,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import radioscope.bhupendrashekhawat.me.android.radioscope.BuildConfig;
 import radioscope.bhupendrashekhawat.me.android.radioscope.R;
+import radioscope.bhupendrashekhawat.me.android.radioscope.events.ReceivedTalkshowStreamUrlEvent;
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.RadioService;
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.AllTalkshows;
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.Talkshow;
+import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.TalkshowStream;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,6 +44,8 @@ public class TalkshowFragment  extends Fragment {
     private RadioService.DARfmApi darFMApi;
     private Call<AllTalkshows> callTalkshows;
     private AllTalkshows allTalkshows;
+    private Call<TalkshowStream> callTalkshowStream;
+    private TalkshowStream talkshowStream;
     private ArrayList<Talkshow> talkshowItems = new ArrayList<Talkshow>();
 
     // private ArrayList<String> songList = new ArrayList<String>();
@@ -47,6 +54,7 @@ public class TalkshowFragment  extends Fragment {
     //ArrayAdapter<String> listAdapter ;
     TalkshowAdapter talkshowAdapter;
     final String SONG_INDEX = "songIndex";
+    final String TALKSHOW_STREAM ="talkshowStream";
 
 
     @Override
@@ -102,11 +110,15 @@ public class TalkshowFragment  extends Fragment {
 
                 int songIndex = position;
                 Talkshow talkshow = talkshowItems.get(songIndex);
+
+                String showid = talkshow.getmShowid();
+                getTalkShowStream(showid);
+
                 Toast.makeText(getActivity(), "Click on "+ talkshow.getmShowname()
                         , Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity() , StreamActivity.class);
+                /*Intent intent = new Intent(getActivity() , StreamActivity.class);
                 intent.putExtra(SONG_INDEX, songIndex);
-                startActivity(intent);
+                startActivity(intent);*/
 
             }
         } );
@@ -157,7 +169,7 @@ public class TalkshowFragment  extends Fragment {
                 }
 
                 Log.d(LOG_TAG,"TalkshowList size inside onResponse = "+talkshowItems.size());
-                updateTalkshows(talkshowItems);
+               updateTalkshows(talkshowItems);
                 //listAdapter.notifyDataSetChanged();
 
 
@@ -198,9 +210,100 @@ public class TalkshowFragment  extends Fragment {
 
 
 
+    /*public String getCurrentShowUrl(String showid){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                //.client(httpClient.build())
+                .build();
+
+        darFMApi = retrofit.create(RadioService.DARfmApi.class);
+
+        getTalkShowStream(showid);
+
+        return null;
+    }*/
+
+    @Subscribe
+    public void playStream(ReceivedTalkshowStreamUrlEvent event){
+
+        String url = event.getUrl();
+        Intent intent = new Intent(getActivity() , StreamActivity.class);
+        intent.putExtra(TALKSHOW_STREAM , url);
+        startActivity(intent);
+    }
+
+    public void getTalkShowStream(final String showid){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                //.client(httpClient.build())
+                .build();
+
+        darFMApi = retrofit.create(RadioService.DARfmApi.class);
+
+        callTalkshowStream = darFMApi.getTalkshowStream(showid,"json", BuildConfig.DARfm_API_KEY);
+
+        callTalkshowStream.enqueue(new Callback<TalkshowStream>() {
+
+            @Override
+            public void onResponse(Call<TalkshowStream> call, Response<TalkshowStream> response) {
+
+                Log.d(LOG_TAG, "Got response from API, URL called is : "+call.request().url());
+                Talkshow curTalkshow;
+                 talkshowStream= response.body();
+
+                for (int i = 0; i < talkshowItems.size(); i++) {
+                    curTalkshow = talkshowItems.get(i);
+                    //  songList.add(curTalkshow.getTitle());
+                    Log.d(LOG_TAG, "Showname: " + curTalkshow.getmShowname()+" Category : "+curTalkshow.getmShowGenre()+" Showid: "+curTalkshow.getmShowid() );
+                }
+
+                Log.d(LOG_TAG,"TalkshowList size inside onResponse = "+talkshowItems.size());
+               // updateTalkshows(talkshowItems);
+                //listAdapter.notifyDataSetChanged();
+
+                TalkshowStream.TStream tstream = talkshowStream.getTalkshowList().get(0);
+                String url = tstream.getmUrl();
+
+
+                EventBus.getDefault().post(new ReceivedTalkshowStreamUrlEvent(url));
+
+
+            }
+
+            @Override
+            public void onFailure(Call<TalkshowStream> call, Throwable t) {
+                Log.d(LOG_TAG, "API call falied , URL called is : "+call.request().url());
+                Log.d(LOG_TAG , "Response is :\n" +call.request().body());
+            }
 
 
 
+        });
 
 
+
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 }

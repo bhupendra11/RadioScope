@@ -38,6 +38,8 @@ public class StreamActivity extends AppCompatActivity {
     private static final int BUFFER_SEGMENT_COUNT = 256;
     final String SONG_TITLE = "songTitle";
     final String SONG_INDEX = "songIndex";
+    final String TALKSHOW_STREAM ="talkshowStream";
+    SimpleExoPlayer player ;
 
     private ImageButton btnPlay;
     @Override
@@ -51,6 +53,12 @@ public class StreamActivity extends AppCompatActivity {
        String BASE_URL = "http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p";
 
 
+        /* Get stream url from intent*/
+
+        String url = getIntent().getStringExtra(TALKSHOW_STREAM);
+
+        if(url != null)
+             BASE_URL = url;
 
         Uri builtUri = Uri.parse(BASE_URL).buildUpon().build();
 
@@ -58,22 +66,7 @@ public class StreamActivity extends AppCompatActivity {
 
         btnPlay = (ImageButton) findViewById(R.id.btnPlay);
 
-
-        // 1. Create a default TrackSelector
-        Handler mainHandler = new Handler();
-        // Measures bandwidth during playback. Can be null if not required.
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-       TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector =
-                new DefaultTrackSelector(mainHandler, videoTrackSelectionFactory);
-
-        // 2. Create a default LoadControl
-        LoadControl loadControl = new DefaultLoadControl();
-
-        // 3. Create the player
-        final SimpleExoPlayer player =
-                ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+        player = MyExoplayer.getInstance(this);
 
         // Produces DataSource instances through which media data is loaded.
         /*DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,

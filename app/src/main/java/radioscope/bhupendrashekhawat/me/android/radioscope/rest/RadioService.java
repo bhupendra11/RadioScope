@@ -3,6 +3,7 @@ package radioscope.bhupendrashekhawat.me.android.radioscope.rest;
 
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.AllTalkshows;
 import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.AllTracks;
+import radioscope.bhupendrashekhawat.me.android.radioscope.rest.model.TalkshowStream;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -35,5 +36,18 @@ public class RadioService {
                 @Query("partner_token") String ApiKey
 
         );
+
+
+        //get stream url for a talkshow
+
+        @GET("/uberurl.php?")
+        Call<TalkshowStream> getTalkshowStream(
+                @Query("showinfo_id") String showid,
+                @Query("callback") String json,
+                @Query("partner_token") String ApiKey
+
+        );
+
+
     }
 }

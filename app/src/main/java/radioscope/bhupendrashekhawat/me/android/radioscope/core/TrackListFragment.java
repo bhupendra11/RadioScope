@@ -72,7 +72,7 @@ public class TrackListFragment extends Fragment {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+              //  .client(httpClient.build())
                 .build();
 
         darFMApi = retrofit.create(RadioService.DARfmApi.class);
